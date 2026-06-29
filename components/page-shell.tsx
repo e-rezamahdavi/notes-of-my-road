@@ -11,9 +11,9 @@ function BrandMark() {
   return (
     <span
       aria-hidden="true"
-      className="relative block size-10 overflow-hidden rounded border border-neutral-700 bg-neutral-900 shadow-sm"
+      className="relative block size-11 overflow-hidden rounded border border-white/15 bg-neutral-950 shadow-sm shadow-black/30"
     >
-      <Image src="/logo.jpg" alt="" fill className="object-cover" sizes="40px" />
+      <Image src="/logo.jpg" alt="" fill className="object-cover" sizes="44px" />
     </span>
   );
 }
@@ -34,10 +34,10 @@ function NavLink({
       href={href}
       onClick={onClick}
       className={cls(
-        "rounded px-3 py-2 text-sm font-medium transition duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400",
+        "rounded px-3 py-2 text-sm font-medium text-neutral-300 transition duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white",
         active
-          ? "bg-neutral-900 text-white"
-          : "text-neutral-400 hover:bg-neutral-900 hover:text-neutral-100",
+          ? "bg-white/10 text-white"
+          : "hover:bg-white/10 hover:text-white",
       )}
     >
       {label}
@@ -52,20 +52,19 @@ export function Navbar() {
   const links = navItems[language];
 
   return (
-    <header className="sticky top-0 z-50 border-b border-neutral-900/80 bg-neutral-950/90 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-neutral-975/75 backdrop-blur-2xl">
       <nav
         aria-label="Main navigation"
-        className="mx-auto flex min-h-16 w-full max-w-6xl items-center justify-between px-4 sm:px-6"
+        className="mx-auto flex min-h-14 w-full max-w-7xl items-center justify-between px-4 sm:px-6"
       >
         <Link
           href="/"
-          className="group flex items-center gap-3 rounded py-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-emerald-400"
+          className="group flex items-center gap-3 rounded py-1.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-emerald-400"
           onClick={() => setIsOpen(false)}
         >
           <BrandMark />
           <span className="flex flex-col leading-none">
-            <span className="text-sm font-semibold text-white">{t.siteName}</span>
-            <span className="mt-1 text-xs text-neutral-500">{t.owner}</span>
+            <span className="text-base font-bold text-white sm:text-lg">{t.siteName}</span>
           </span>
         </Link>
 
@@ -86,7 +85,7 @@ export function Navbar() {
 
         <button
           type="button"
-          className="inline-grid size-10 place-items-center rounded border border-neutral-800 bg-neutral-900 text-neutral-200 transition hover:border-neutral-700 hover:bg-neutral-850 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400 lg:hidden"
+          className="inline-grid size-10 place-items-center rounded border border-white/15 bg-white/10 text-neutral-100 transition hover:border-white/30 hover:bg-white/15 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white lg:hidden"
           aria-label={isOpen ? "Close menu" : "Open menu"}
           aria-expanded={isOpen}
           onClick={() => setIsOpen((current) => !current)}
@@ -96,8 +95,8 @@ export function Navbar() {
       </nav>
 
       {isOpen ? (
-        <div className="border-t border-neutral-900 bg-neutral-950 px-4 pb-4 pt-2 lg:hidden">
-          <div className="mx-auto flex max-w-6xl flex-col gap-1">
+        <div className="border-t border-white/10 bg-neutral-975/95 px-4 pb-4 pt-2 backdrop-blur-2xl lg:hidden">
+          <div className="mx-auto flex max-w-7xl flex-col gap-1">
             {links.map((item) => (
               <NavLink
                 key={item.href}
@@ -126,10 +125,10 @@ function LanguageSwitcher({
 }) {
   return (
     <div
-      className="inline-flex items-center gap-1 rounded border border-neutral-800 bg-neutral-900 p-1"
+      className="inline-flex items-center gap-1 rounded border border-white/15 bg-white/10 p-1"
       aria-label="Language switcher"
     >
-      <Languages size={16} className="mx-2 text-neutral-500" aria-hidden="true" />
+      <Languages size={16} className="mx-2 text-neutral-400" aria-hidden="true" />
       {(Object.keys(languages) as Language[]).map((item) => (
         <button
           key={item}
@@ -139,7 +138,7 @@ function LanguageSwitcher({
             "min-w-10 rounded px-2.5 py-1.5 text-xs font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400",
             language === item
               ? "bg-neutral-100 text-neutral-950"
-              : "text-neutral-400 hover:bg-neutral-800 hover:text-neutral-100",
+              : "text-neutral-300 hover:bg-white/10 hover:text-white",
           )}
           aria-pressed={language === item}
         >
@@ -154,8 +153,8 @@ export function Footer() {
   const { t } = useLanguage();
 
   return (
-    <footer className="border-t border-neutral-900">
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-neutral-500 sm:px-6 md:flex-row md:items-center md:justify-between">
+    <footer className="border-t border-white/10 bg-neutral-975">
+      <div className="mx-auto flex w-full max-w-7xl flex-col gap-4 px-4 py-8 text-sm text-neutral-500 sm:px-6 md:flex-row md:items-center md:justify-between">
         <p>{t.footer.copyright}</p>
         <p>{t.built}</p>
       </div>
