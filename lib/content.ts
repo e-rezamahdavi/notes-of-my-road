@@ -77,7 +77,7 @@ export const navItems: Record<Language, NavItem[]> = {
     { href: "#about", label: "درباره" },
     { href: "#terminal", label: "ترمینال" },
     { href: "#socials", label: "لینک‌ها" },
-    { href: "#donation", label: "Donation" },
+    { href: "#donation", label: "حمایت" },
   ],
   az: [
     { href: "#home", label: "Ana səhifə" },
@@ -247,11 +247,11 @@ export const content = {
       visitLabel: "باز کردن لینک",
     },
     support: {
-      title: "Donation",
-      description: "اگر این مسیر برای شما مفید است، بخش Donation روش‌های فعلی پرداخت را نشان می‌دهد.",
+      title: "حمایت",
+      description: "اگر این مسیر برای شما مفید است، بخش حمایت روش‌های فعلی پرداخت را نشان می‌دهد.",
       note:
-        "روش‌های Donation بر اساس نوع پرداخت جدا شده‌اند تا بعدا روش‌های بیشتری اضافه شوند.",
-      buttons: ["پرداخت ریالی", "Crypto", "ارسال پیام"],
+        "روش‌های حمایت بر اساس نوع پرداخت جدا شده‌اند تا بعدا روش‌های بیشتری اضافه شوند.",
+      buttons: ["پرداخت ریالی", "رمز ارز", "ارسال پیام"],
     },
     footer: {
       copyright: "Notes of my road © 2026",

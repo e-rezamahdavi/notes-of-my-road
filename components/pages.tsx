@@ -7,6 +7,7 @@ import {
   Banknote,
   Bitcoin,
   Check,
+  ChevronDown,
   ChevronRight,
   Clipboard,
   Code2,
@@ -23,6 +24,7 @@ import {
 } from "lucide-react";
 import { FormEvent, useMemo, useRef, useState } from "react";
 import { useLanguage } from "@/components/language-provider";
+import { AmbientMotion, RoadMotion } from "@/components/road-motion";
 import { cls, type Language } from "@/lib/content";
 
 type SocialLink = {
@@ -196,7 +198,7 @@ const donationGroups: DonationGroup[] = [
   {
     title: {
       en: "Lovely message",
-      fa: "Lovely message",
+      fa: "پیام محبت‌آمیز",
       az: "Lovely message",
     },
     description: {
@@ -209,9 +211,9 @@ const donationGroups: DonationGroup[] = [
 ];
 
 const copyLabels = {
-  en: { copy: "Copy", copied: "Copied", open: "Open link" },
-  fa: { copy: "کپی", copied: "کپی شد", open: "باز کردن لینک" },
-  az: { copy: "Kopyala", copied: "Kopyalandı", open: "Linki aç" },
+  en: { copy: "Copy", copied: "Copied", open: "Open link", collapse: "Hide methods" },
+  fa: { copy: "کپی", copied: "کپی شد", open: "باز کردن لینک", collapse: "بستن روش‌ها" },
+  az: { copy: "Kopyala", copied: "Kopyalandı", open: "Linki aç", collapse: "Metodları gizlət" },
 } as const;
 
 const ui = {
@@ -254,6 +256,9 @@ const ui = {
       "Donation is a small vote of confidence. In the computer world, it helps independent builders keep documenting, maintaining tools, publishing tutorials, and sharing what they learn in public.",
     donationCulture:
       "Around the world, donation culture keeps open source projects, educational channels, personal blogs, and tiny tools alive. It is not only about money; it is a signal that the work mattered to someone.",
+    donationEyebrow: "Donation",
+    donationChooseLabel: "Choose a support method",
+    donationShowLabel: "Show details",
     networkLabel: "Payment network",
     minimumLabel: "Minimum deposit",
     addressLabel: "Address",
@@ -262,7 +267,7 @@ const ui = {
     heroTitle: "Notes of my road",
     heroDescription:
       "گزارش‌های یادگیری، یادداشت‌های لینوکس، تجربه‌های شبکه و ردپای عمومی مسیری که هر روز ساخته و مستند می‌شود.",
-    donationButton: "Donation",
+    donationButton: "حمایت",
     socialButton: "لینک‌های من",
     highlightsEyebrow: "مسیر، منظم و قابل دنبال کردن",
     highlightsTitle: "خانه‌ای خلوت برای یادگیری عملی.",
@@ -289,17 +294,20 @@ const ui = {
     terminalTitle: "Road shell",
     terminalDescription:
       "Try a few commands. Terminal بهتر است انگلیسی بماند؛ چون بعضی چیزها در زبان shell طبیعی‌ترند.",
-    terminalHint: "Try: help, whoami, socials, donation, clear",
+    terminalHint: "Try: help, whoami, socials, support, clear",
     socialTitle: "لینک‌های من",
     socialDescription: "برای دنبال کردن Notes of my road یا ارتباط مستقیم، این کانال‌ها فعال‌اند.",
-    donationTitle: "Donation",
+    donationTitle: "حمایت",
     donationDescription:
-      "Donation یعنی یک رأی کوچک به ادامه مسیر. در دنیای کامپیوتر، همین حمایت‌ها باعث می‌شود آدم‌ها بتوانند ابزارها، آموزش‌ها، مستندات، پروژه‌های open source و تجربه‌هایشان را زنده نگه دارند.",
+      "حمایت یعنی یک رأی کوچک به ادامه مسیر. در دنیای کامپیوتر، همین همراهی‌ها باعث می‌شود آدم‌ها بتوانند ابزارها، آموزش‌ها، مستندات، پروژه‌های open source و تجربه‌هایشان را زنده نگه دارند.",
     donationCulture:
-      "در فرهنگ جهانی تکنولوژی، Donation فقط پول دادن نیست؛ یک پیام است که می‌گوید این کار دیده شده و ارزش ادامه دادن دارد. خیلی از بلاگ‌ها، کانال‌های آموزشی، maintainerهای open source و سازنده‌های مستقل با همین حمایت‌های کوچک نفس می‌کشند.",
-    networkLabel: "Payment network",
-    minimumLabel: "Minimum deposit",
-    addressLabel: "Address",
+      "در فرهنگ جهانی تکنولوژی، حمایت فقط پول دادن نیست؛ یک پیام است که می‌گوید این کار دیده شده و ارزش ادامه دادن دارد. خیلی از بلاگ‌ها، کانال‌های آموزشی، maintainerهای open source و سازنده‌های مستقل با همین حمایت‌های کوچک نفس می‌کشند.",
+    donationEyebrow: "حمایت",
+    donationChooseLabel: "روش حمایت را انتخاب کن",
+    donationShowLabel: "نمایش جزئیات",
+    networkLabel: "شبکه پرداخت",
+    minimumLabel: "حداقل واریز",
+    addressLabel: "آدرس",
   },
   az: {
     heroTitle: "Notes of my road",
@@ -340,6 +348,9 @@ const ui = {
       "Donation yola davam etmək üçün kiçik bir güvən səsidir. Computer dünyasında bu dəstəklər insanların tools, tutorial, documentation, open source və təcrübələrini yaşatmasına kömək edir.",
     donationCulture:
       "Dünya tech mədəniyyətində Donation təkcə pul deyil; bu işin görüldüyünü və davam etməyə dəyər olduğunu deyən bir mesajdır. Bloglar, educational channels, open source maintainers və independent builders çox vaxt bu kiçik dəstəklərlə nəfəs alır.",
+    donationEyebrow: "Donation",
+    donationChooseLabel: "Dəstək metodunu seç",
+    donationShowLabel: "Detalları göstər",
     networkLabel: "Payment network",
     minimumLabel: "Minimum deposit",
     addressLabel: "Address",
@@ -366,26 +377,27 @@ function HeroSection() {
     <section id="home" className="relative isolate overflow-hidden border-b border-white/10">
       <div className="absolute inset-0 -z-10">
         <Image
-          src="/header.jpg"
-          alt="Notes of my road channel header"
+          src="/header-road-network.png"
+          alt="Notes of my road network road header"
           fill
           priority
-          className="object-cover object-center opacity-85"
+          className="object-cover object-center opacity-90"
           sizes="100vw"
         />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(3,3,3,0.34)_0%,rgba(3,3,3,0.05)_38%,rgba(3,3,3,0.82)_100%)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(3,3,3,0.92)_0%,rgba(3,3,3,0.45)_34%,rgba(3,3,3,0.18)_62%,rgba(3,3,3,0.84)_100%)]" />
+        <RoadMotion className="absolute inset-0 opacity-95 mix-blend-screen" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(3,3,3,0.5)_0%,rgba(3,3,3,0.16)_32%,rgba(3,3,3,0.86)_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(3,3,3,0.86)_0%,rgba(3,3,3,0.38)_42%,rgba(3,3,3,0.78)_100%)]" />
       </div>
 
-      <div className="mx-auto flex min-h-[calc(100svh-7rem)] w-full max-w-7xl flex-col justify-end px-4 pb-8 pt-24 sm:px-6 lg:pb-12">
+      <div className="mx-auto flex min-h-[calc(100svh-3.5rem)] w-full max-w-7xl flex-col justify-start px-4 pb-8 pt-[18svh] sm:px-6 sm:pb-12 sm:pt-[24svh] lg:min-h-[calc(100svh-4rem)] lg:justify-end lg:pb-14 lg:pt-20">
         <div className="max-w-4xl">
-          <h1 className="max-w-3xl text-5xl font-semibold leading-none text-white sm:text-7xl lg:text-8xl">
+          <h1 className="max-w-3xl text-4xl font-semibold leading-[0.98] text-white sm:text-7xl lg:text-8xl">
             {t.heroTitle}
           </h1>
-          <p className="mt-5 max-w-2xl text-base leading-8 text-neutral-200 sm:text-xl">
+          <p className="mt-4 max-w-2xl text-base leading-7 text-neutral-200 sm:mt-5 sm:text-xl sm:leading-8">
             {t.heroDescription}
           </p>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+          <div className="mt-6 flex flex-col gap-3 sm:mt-8 sm:flex-row">
             <a
               href="#donation"
               className="inline-flex min-h-11 items-center justify-center gap-2 rounded border border-white bg-white px-5 py-2.5 text-sm font-semibold text-neutral-950 transition hover:bg-neutral-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
@@ -412,7 +424,9 @@ function HighlightsSection() {
   const t = ui[language];
 
   return (
-    <section id="about" className="bg-neutral-975">
+    <section id="about" className="relative isolate overflow-hidden bg-neutral-975">
+      <AmbientMotion variant="mesh" className="absolute inset-0 -z-10 opacity-40" />
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_18%_20%,rgba(52,211,153,0.12),transparent_34%),linear-gradient(180deg,rgba(7,7,7,0.78),rgba(7,7,7,0.96))]" />
       <div className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 sm:py-24">
         <div className="max-w-3xl">
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-300">
@@ -452,7 +466,9 @@ function TerminalSection() {
   const t = ui[language];
 
   return (
-    <section id="terminal" className="border-y border-white/10 bg-[#f3f1eb] text-neutral-950">
+    <section id="terminal" className="relative isolate overflow-hidden border-y border-white/10 bg-[#f3f1eb] text-neutral-950">
+      <AmbientMotion variant="terminal" className="absolute inset-0 -z-10 opacity-45 mix-blend-multiply" />
+      <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(243,241,235,0.98),rgba(243,241,235,0.82),rgba(243,241,235,0.96))]" />
       <div className="mx-auto grid w-full max-w-7xl gap-8 px-4 py-16 sm:px-6 sm:py-24 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
         <div>
           <div className="inline-flex items-center gap-2 rounded border border-neutral-950/15 bg-white/60 px-3 py-1.5 text-sm text-neutral-600">
@@ -556,7 +572,7 @@ function getTerminalOutput(command: string) {
     case "":
       return [""];
     case "help":
-      return ["commands: whoami, motd, socials, donation, clear"];
+      return ["commands: whoami, motd, socials, support, clear"];
     case "whoami":
       return ["user"];
     case "motd":
@@ -570,7 +586,7 @@ function getTerminalOutput(command: string) {
       ];
     case "donation":
     case "support":
-      return ["Donation section: #donation", "Check payment network and minimum deposit before crypto transfers."];
+      return ["Support section: #donation", "Choose a support method first, then check network and minimum deposit."];
     default:
       return [
         `Invalid command: ${command}`,
@@ -584,7 +600,9 @@ function SocialSection() {
   const t = ui[language];
 
   return (
-    <section id="socials" className="border-y border-white/10 bg-[#070707]">
+    <section id="socials" className="relative isolate overflow-hidden border-y border-white/10 bg-[#070707]">
+      <AmbientMotion variant="links" className="absolute inset-0 -z-10 opacity-35" />
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_82%_20%,rgba(96,165,250,0.12),transparent_34%),linear-gradient(180deg,rgba(7,7,7,0.76),rgba(7,7,7,0.96))]" />
       <div className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 sm:py-24">
         <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
           <div>
@@ -636,14 +654,17 @@ function SocialSection() {
 function DonationSection() {
   const { language } = useLanguage();
   const t = ui[language];
+  const [openGroup, setOpenGroup] = useState("");
 
   return (
-    <section id="donation" className="border-t border-white/10 bg-[#050505]">
+    <section id="donation" className="relative isolate overflow-hidden border-t border-white/10 bg-[#050505]">
+      <AmbientMotion variant="support" className="absolute inset-0 -z-10 opacity-30" />
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_25%_15%,rgba(251,191,36,0.1),transparent_30%),radial-gradient(circle_at_85%_30%,rgba(52,211,153,0.12),transparent_32%),linear-gradient(180deg,rgba(5,5,5,0.82),rgba(5,5,5,0.97))]" />
       <div className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 sm:py-24">
         <div className="grid gap-10 lg:grid-cols-[0.75fr_1.25fr] lg:items-start">
           <div className="lg:sticky lg:top-24">
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-300">
-              Donation
+              {t.donationEyebrow}
             </p>
             <h2 className="mt-3 text-4xl font-semibold leading-tight text-white sm:text-6xl">
               {t.donationTitle}
@@ -652,30 +673,61 @@ function DonationSection() {
             <p className="mt-4 leading-8 text-neutral-500">{t.donationCulture}</p>
           </div>
 
-          <div className="grid gap-5">
-            {donationGroups.map((group) => (
-              <section
-                key={group.title.en}
-                className="overflow-hidden rounded border border-white/10 bg-white/[0.035]"
-              >
-                <div className="border-b border-white/10 px-4 py-4 sm:px-5">
-                  <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-                    <h3 className="text-xl font-semibold text-white">{group.title[language]}</h3>
-                    <span className="rounded border border-white/10 bg-black/30 px-2.5 py-1 text-xs font-semibold text-neutral-400">
-                      {group.items.length}
-                    </span>
-                  </div>
-                  <p className="mt-2 max-w-3xl leading-7 text-neutral-500">
-                    {group.description[language]}
-                  </p>
-                </div>
-                <div className="divide-y divide-white/10">
-                  {group.items.map((item) => (
-                    <DonationRow key={`${item.name}-${item.network}`} item={item} />
-                  ))}
-                </div>
-              </section>
-            ))}
+          <div>
+            <p className="mb-4 text-sm font-semibold text-neutral-400">{t.donationChooseLabel}</p>
+            <div className="grid gap-4">
+              {donationGroups.map((group) => {
+                const isOpen = openGroup === group.title.en;
+
+                return (
+                  <section
+                    key={group.title.en}
+                    className="overflow-hidden rounded border border-white/10 bg-black/25 backdrop-blur-xl transition hover:border-white/20"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => setOpenGroup(isOpen ? "" : group.title.en)}
+                      className="grid w-full grid-cols-[auto_minmax(0,1fr)] gap-3 px-4 py-4 text-start transition hover:bg-white/[0.04] focus-visible:outline focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-white sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:items-center sm:gap-4 sm:px-5"
+                      aria-expanded={isOpen}
+                    >
+                      <span className="grid size-10 place-items-center rounded border border-white/10 bg-white/[0.06] text-emerald-300 sm:size-11">
+                        {(() => {
+                          const Icon = group.items[0].icon;
+                          return <Icon size={20} aria-hidden="true" />;
+                        })()}
+                      </span>
+                      <span className="min-w-0">
+                        <span className="flex flex-wrap items-center gap-2">
+                          <span className="text-lg font-semibold text-white">{group.title[language]}</span>
+                          <span className="rounded border border-white/10 bg-black/30 px-2.5 py-1 text-xs font-semibold text-neutral-400">
+                            {group.items.length}
+                          </span>
+                        </span>
+                        <span className="mt-2 line-clamp-2 block leading-7 text-neutral-500">
+                          {group.description[language]}
+                        </span>
+                      </span>
+                      <span className="col-span-2 flex items-center gap-2 border-t border-white/10 pt-3 text-sm font-semibold text-neutral-300 sm:col-span-1 sm:border-t-0 sm:pt-0 sm:justify-end">
+                        <span>{isOpen ? copyLabels[language].collapse : t.donationShowLabel}</span>
+                        <ChevronDown
+                          size={17}
+                          aria-hidden="true"
+                          className={cls("transition", isOpen ? "rotate-180" : "")}
+                        />
+                      </span>
+                    </button>
+
+                    {isOpen ? (
+                      <div className="divide-y divide-white/10 border-t border-white/10 bg-black/20">
+                        {group.items.map((item) => (
+                          <DonationRow key={`${item.name}-${item.network}`} item={item} />
+                        ))}
+                      </div>
+                    ) : null}
+                  </section>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
