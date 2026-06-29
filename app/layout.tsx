@@ -3,6 +3,9 @@ import "./globals.css";
 import { AppFrame } from "@/components/page-shell";
 import { pageIntros, siteUrl } from "@/lib/content";
 
+const headerImage = "/header-road-network.png";
+const logoImage = "/logo.jpg";
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
@@ -36,10 +39,16 @@ export const metadata: Metadata = {
     description: pageIntros.home.description,
     images: [
       {
-        url: "/header.jpg",
+        url: headerImage,
         width: 2560,
-        height: 1023,
-        alt: "Notes of my road header",
+        height: 1440,
+        alt: "Notes of my road network road header",
+      },
+      {
+        url: logoImage,
+        width: 512,
+        height: 512,
+        alt: "Notes of my road logo",
       },
     ],
   },
@@ -47,7 +56,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Notes of my road",
     description: pageIntros.home.description,
-    images: ["/header.jpg"],
+    images: [headerImage],
   },
   icons: {
     icon: "/favicon.svg",
